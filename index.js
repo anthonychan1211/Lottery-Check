@@ -1,12 +1,11 @@
-const arr1 = [1,2,3,4,5,6]
+const lottery = [1,2,3,4,5,6]
 const specialNum = 7
-const arr2 = [1,2,3,4,5,16,17,18]
+const bought = [1,2,3,4,16,7,18,19]
 
 
 
-function checkMarkSix(LotteryArr, boughtArr){
-    let goodNum = boughtArr.filter(x => LotteryArr.includes(x))
-    let falseNum = boughtArr.filter(x => !goodNum.includes(x))
+function checkMarkSix(LotteryArr, boughtArr, specialNum){
+
     // Find subset function
     function subset(arra, arra_size){
     var result_set = [], 
@@ -29,35 +28,39 @@ function checkMarkSix(LotteryArr, boughtArr){
 
     return result_set; 
 }
-if(goodNum.length == 3){
-    let comb = subset(falseNum, 6-goodNum.length).filter(x => x.length<=3)
-    for(let i = 0 ; i < comb.length ; i++){
-    let fullArr = goodNum.concat(comb[i]).sort((a,b)=> a-b);
-    console.log(fullArr);
-    return;
+
+
+
+LotteryArr.push(specialNum)
+    let goodNum = boughtArr.filter(x => LotteryArr.includes(x))
+    let falseNum = boughtArr.filter(x => !goodNum.includes(x))
+    if(goodNum.length < 3 || goodNum.length === 3 && goodNum.includes(specialNum)){
+        return 'Oops Sorry Good Luck Next Time'
     }
-}
-if(goodNum.length > 3){
+
+if(goodNum.length >= 3){
+
+
     let wholeArr = [];
     for(let i = 0 ; i < goodNum.length -2 ; i++){
         let firstHalfLength = goodNum.length - i;
-        let firstHalf = subset(goodNum, firstHalfLength).filter(x => x.length <= firstHalfLength);
-        let lastHalf = subset(falseNum, 6 - firstHalfLength).filter(x => x.length <= 6 - firstHalfLength);
+        let firstHalf = subset(goodNum, firstHalfLength)
+        .filter(x => x.length!== 3 || !x.includes(specialNum))
+        let lastHalf = subset(falseNum, 6 - firstHalfLength)
         firstHalf.forEach(x=> x.sort((a,b) =>a-b));
         lastHalf.forEach(x=> x.sort((a,b) =>a-b));
-        // console.log(firstHalf);
-        // console.log(lastHalf);
         for(let j = 0 ; j < firstHalf.length; j++){
             for(let k =0; k < lastHalf.length;k++){
                 let newArr = firstHalf[j].concat(lastHalf[k]);
-                // console.log(newArr);
+                console.log(newArr);
                 wholeArr.push(newArr)
             }
             
         }
     }
-    return wholeArr;
+
 }
+    
 }
-checkMarkSix(arr1, arr2)
-console.log(checkMarkSix(arr1, arr2));
+
+checkMarkSix(lottery, bought, specialNum);
